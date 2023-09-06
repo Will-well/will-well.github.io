@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>01_Http、Https、Http2.0 的基础知识总结（持续更新篇） | will-well</title><meta name="author" content="will-we"><meta name="copyright" content="will-we"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="更新时间 更新记录    2018.05.01 更新Http的基础知识部分   2018.05.03 更新Https的相关内容整理   2018.05.05 更新Http2.0的相关内容整理   前言  不得不说现在无论在前端和后端领域的技术迭代十分迅速，比如前段时间SpringBoot2.0的更新采用了Http2.0技术；这些基础协议的更新往往带来了实质的更新。一些名词:”HTTP 管">
+<meta property="og:type" content="article">
+<meta property="og:title" content="01_Http、Https、Http2.0 的基础知识总结（持续更新篇）">
+<meta property="og:url" content="http://will-we.gitee.io/2018/05/05/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89/index.html">
+<meta property="og:site_name" content="will-well">
+<meta property="og:description" content="更新时间 更新记录    2018.05.01 更新Http的基础知识部分   2018.05.03 更新Https的相关内容整理   2018.05.05 更新Http2.0的相关内容整理   前言  不得不说现在无论在前端和后端领域的技术迭代十分迅速，比如前段时间SpringBoot2.0的更新采用了Http2.0技术；这些基础协议的更新往往带来了实质的更新。一些名词:”HTTP 管">
+<meta property="og:locale">
+<meta property="og:image" content="http://will-we.gitee.io/uploads/avatar.png">
+<meta property="article:published_time" content="2018-05-05T12:52:19.000Z">
+<meta property="article:modified_time" content="2023-09-02T08:17:23.672Z">
+<meta property="article:author" content="will-we">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="后端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://will-we.gitee.io/uploads/avatar.png"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://will-we.gitee.io/2018/05/05/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '01_Http、Https、Http2.0 的基础知识总结（持续更新篇）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-02 16:17:23'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/uploads/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="will-well"><span class="site-name">will-well</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">01_Http、Https、Http2.0 的基础知识总结（持续更新篇）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2018-05-05T12:52:19.000Z" title="Created 2018-05-05 20:52:19">2018-05-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-09-02T08:17:23.672Z" title="Updated 2023-09-02 16:17:23">2023-09-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="01_Http、Https、Http2.0 的基础知识总结（持续更新篇）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><span id="more"></span>
+
+<table>
+<thead>
+<tr>
+<th>更新时间</th>
+<th>更新记录</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2018.05.01</td>
+<td>更新Http的基础知识部分</td>
+</tr>
+<tr>
+<td>2018.05.03</td>
+<td>更新Https的相关内容整理</td>
+</tr>
+<tr>
+<td>2018.05.05</td>
+<td>更新Http2.0的相关内容整理</td>
+</tr>
+</tbody></table>
+<p><strong>前言</strong></p>
+<blockquote>
+<p>不得不说现在无论在前端和后端领域的技术迭代十分迅速，比如前段时间SpringBoot2.0的更新采用了Http2.0技术；这些基础协议的更新往往带来了实质的更新。一些名词:”HTTP 管线化”、”会话跟踪”、”跨站攻击”等等，那些你耳熟能详，但是无法细究的东西决定了这个总结诞生，或许文章会很长，但是也请静下心来阅读，而这个文章自己打算一段时间来持续更新。</p>
+</blockquote>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="HTTP介绍"><a href="#HTTP介绍" class="headerlink" title="HTTP介绍"></a>HTTP介绍</h3><h4 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h4><blockquote>
+<p>HTTP协议（HyperText Transfer Protocol，超文本传输协议）是用于从WWW服务器传输超文本到本地浏览器的传送协议。<br>它的发展是万维网协会（World Wide Web Consortium）和Internet工作小组IETF（Internet Engineering Task Force）合作的结果。<br>它可以使浏览器更加高效，使网络传输减少。它不仅保证计算机正确快速地传输超文本文档，还确定传输文档中的哪一部分，以及哪部分内容首先显示(如文本先于图形)等。</p>
+</blockquote>
+<h4 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h4><blockquote>
+<p>最常用的是HTTP1.0&#x2F;1.1<br>最新版本是HTTP2.0，与1.0&#x2F;1.1相比，有了更高的性能、安全性和灵活性<br>以前的版本0.9等</p>
+</blockquote>
+<h3 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h3><h4 id="URL与资源"><a href="#URL与资源" class="headerlink" title="URL与资源"></a>URL与资源</h4><p>在TCP&#x2F;IP模型中，所有的网络连接都要使用方案，方案定义使用什么协议，比如http、ftp、telnet</p>
+<p>一个标准的网络请求包括:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;scheme&gt;://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;:&lt;port&gt;/&lt;path&gt;;&lt;params&gt;?&lt;query&gt;#&lt;frag&gt;</span><br></pre></td></tr></table></figure>
+
+
+<p>但在实际使用过程中，对于不同协议可以缺少某些信息，比如</p>
+<blockquote>
+<p><a href="ftp://192.168.169.121/">ftp://192.168.169.121</a><br><a target="_blank" rel="noopener" href="http://www.baidu.com/index.html">http://www.baidu.com/index.html</a></p>
+</blockquote>
+<h4 id="URI、URL和URN"><a href="#URI、URL和URN" class="headerlink" title="URI、URL和URN"></a>URI、URL和URN</h4><blockquote>
+<p>URI:统一资源标识符，包括URL和URN<br>URL:统一资源标识符，比如<a target="_blank" rel="noopener" href="http://www.baidu.com/index.html%E5%B0%B1%E6%98%AF%E4%B8%80%E4%B8%AAURL">http://www.baidu.com/index.html就是一个URL</a><br>URN:统一资源名，它是无关物理位置的资源名定义，例子urn:ieft:rfc:2141  </p>
+</blockquote>
+<p>目前URN处于试验阶段，实际应用还很困难，在没有特别说明时，一般我们说的URI就代表URL</p>
+<h4 id="媒体类型"><a href="#媒体类型" class="headerlink" title="媒体类型"></a>媒体类型</h4><blockquote>
+<p>在HTTP中，不管是word文件、js文件或者图片都是资源，通可以通过URL进行请求，但每种不同的文件都要进行区分，以便服务端和客户端进行正确处理，比如播放声音、显示文字。</p>
+</blockquote>
+<p>因此，HTTP仔细地给每种要通过http请求响应传输的对象都打上名为MIME类型的数据格式标签。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MIME: Multipurpose Internet Mail Extension 多用途因特网邮件扩展</span><br></pre></td></tr></table></figure>
+<p>最开始是为了解决电子邮件系统之间的问题，后来用于定义更多类型的多谋体内容。常见的MIME：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">html：text/html</span><br><span class="line">Ascii: text/plain</span><br><span class="line">Json:text/json</span><br><span class="line">Jpg:image/jpeg</span><br><span class="line">Gif:image/gif</span><br><span class="line">Ppt: application/vnd.ms-powerpoint</span><br><span class="line">Quicktime:video/quicktime</span><br></pre></td></tr></table></figure>
+<h3 id="协议介绍"><a href="#协议介绍" class="headerlink" title="协议介绍"></a>协议介绍</h3><h4 id="协议栈"><a href="#协议栈" class="headerlink" title="协议栈"></a>协议栈</h4><p>HTTP在TCP&#x2F;IP协议栈中的位置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10144.img"> </p>
+<p>HTTP是基于TCP&#x2F;IP的应用，因此HTTP无须关心网络寻址、数据传输和拓扑结构</p>
+<h4 id="协议工作流程"><a href="#协议工作流程" class="headerlink" title="协议工作流程"></a>协议工作流程</h4><p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10160.img" alt="协议图">  </p>
+<p>在HTTP1.0&#x2F;1.1中，HTTP采用请求响应模型来处理HTTP事务 HTTP事务有一条请求命令和一个响应结果组成，它们通过HTTP报文进行数据传输</p>
+<p><strong>注意：请求是从客户端发往服务端，而响应是从服务端发回客户端</strong></p>
+<p>HTTP的工作过程</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10171.img" alt="HTTP的工作过程"></p>
+<ul>
+<li>（1）客户端连接到Web服务器</li>
+<li>（2）发送HTTP请求</li>
+<li>（3）服务器接受请求并返回HTTP响应</li>
+<li>（4）释放连接TCP连接</li>
+<li>（5）客户端浏览器解析HTML内容</li>
+</ul>
+<h3 id="HTTP报文"><a href="#HTTP报文" class="headerlink" title="HTTP报文"></a>HTTP报文</h3><h4 id="报文"><a href="#报文" class="headerlink" title="报文"></a>报文</h4><blockquote>
+<p>HTTP1.0&#x2F;1.1报文由三部分组成：起始行、首部以及可选、包含数据的主体<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10250.img" alt="image"></p>
+</blockquote>
+<p><strong>其中起始行和首部是由行分隔的ASCII文本</strong></p>
+<p><strong>主体</strong>是一个可选的数据块，主体中可以包含文本也可以包含二进制数据，也可以为空，与首部通过空一行进行区分</p>
+<p><strong>请求报文</strong>的格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;method &gt; &lt;request-url &gt; &lt;version&gt;</span><br><span class="line">&lt;headers&gt;</span><br><span class="line"></span><br><span class="line">&lt;entity-body&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+</blockquote>
+<p><strong>响应报文</strong>的格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;version &gt; &lt;status &gt; &lt;reason-phrase&gt;</span><br><span class="line">&lt;headers&gt;</span><br><span class="line"></span><br><span class="line">&lt;entity-body&gt;</span><br></pre></td></tr></table></figure>
+<p>具体例子：<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10190.img" alt="浏览器报文"></p>
+<p>注：部分文章也将HTTP请求报文分为两部分请求头和请求体，请求头的第一行为请求行。</p>
+<h4 id="首部字段"><a href="#首部字段" class="headerlink" title="首部字段"></a>首部字段</h4><blockquote>
+<p>HTTP首部字段向请求和响应报文中添加了一些附加信息，是一系列 key-value的列表,比如Content-Type:image&#x2F;jpeg 表示类型是jpeg图片</p>
+</blockquote>
+<p>首部的分类包括</p>
+<blockquote>
+<p>通用首部：在请求和响应中都出现的信息<br>请求首部：只在请求报文中出现的信息<br>响应首部：只在响应报文中出现的信息<br>实体首部：描述主题的长度、内容等的信息<br>扩展首部：在HTTP规范中没有定义的其他信息    </p>
+</blockquote>
+<h4 id="实体"><a href="#实体" class="headerlink" title="实体"></a>实体</h4><p>HTTP实体是HTTP报文的负荷，是HTTP要传输的数据内容。</p>
+<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><p>HTTP基本的方法包括：GET&#x2F;POST&#x2F;HEAD&#x2F;PUT&#x2F;TRACE&#x2F;OPTIONS，用来告诉服务端要做什么操作</p>
+<h5 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h5><p>GET是最常用的方法，通常用于请求服务器发送某个资源<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10212.img" alt="GET"></p>
+<h5 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h5><p>POST是常用的方法之一，用于向服务端提交数据，有主体<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10214.img" alt="POST"></p>
+<h5 id="HEAD"><a href="#HEAD" class="headerlink" title="HEAD"></a>HEAD</h5><p>与GET类似，但在响应中只有首部，不返回具体数据，可以用来查看资源是否存在</p>
+<h5 id="PUT-TRACE-OPTIONS-DELETE"><a href="#PUT-TRACE-OPTIONS-DELETE" class="headerlink" title="PUT&#x2F;TRACE&#x2F;OPTIONS&#x2F;DELETE"></a>PUT&#x2F;TRACE&#x2F;OPTIONS&#x2F;DELETE</h5><blockquote>
+<p>PUT:用于向服务端写入文档<br>TRACE:用于跟踪某个请求<br>OPTIONS:用于查询服务端支持的方法<br>DELETE:用于删除服务端某个资源   </p>
+</blockquote>
+<h5 id="其他扩展方法"><a href="#其他扩展方法" class="headerlink" title="其他扩展方法"></a>其他扩展方法</h5><blockquote>
+<p>HTTP在设计之初就被设计成可扩展的，这样就可以适应新的特性。<br>扩展方法是在HTTP规范中没有定义的方法，它们有特别的用处，但需要服务端进行实现：<br>LOCK：锁定某个资源<br>COPY：拷贝某个资源<br>MOVE：移动某个资源 </p>
+</blockquote>
+<h4 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h4><blockquote>
+<p>状态码是响应报文中对请求所做事情的处理结果，以方便客户端处理响应数据</p>
+</blockquote>
+<p>状态码分为五大类：</p>
+<blockquote>
+<p>信息性状态码：100<del>199<br>成功状态码：200</del>299<br>重定向状态码：300<del>399<br>客户端错误状态码：400</del>499<br>服务端错误状态码：500~599   </p>
+</blockquote>
+<p>常见的状态码有如下几种</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- 200 OK 客户端请求成功	</span><br><span class="line">- 301 Moved Permanently 请求永久重定向	</span><br><span class="line">- 302 Moved Temporarily 请求临时重定向	</span><br><span class="line">- 304 Not Modified 文件未修改，可以直接使用缓存的文件。	</span><br><span class="line">- 400 Bad Request 由于客户端请求有语法错误，不能被服务器所理解。	</span><br><span class="line">- 401 Unauthorized 请求未经授权。这个状态代码必须和WWW-Authenticate报头域一起使用	</span><br><span class="line">- 403 Forbidden 服务器收到请求，但是拒绝提供服务。服务器通常会在响应正文中给出不提供服务的原因	</span><br><span class="line">- 404 Not Found 请求的资源不存在，例如，输入了错误的URL	</span><br><span class="line">- 500 Internal Server Error 服务器发生不可预期的错误，导致无法完成客户端的请求。	</span><br><span class="line">- 503 Service Unavailable 服务器当前不能够处理客户端的请求，在一段时间之后，服务器可能会恢复正常。	</span><br></pre></td></tr></table></figure>
+<h2 id="Https的基础知识"><a href="#Https的基础知识" class="headerlink" title="Https的基础知识"></a>Https的基础知识</h2><blockquote>
+<p><strong>超文本传输安全协议</strong>（英语：Hypertext Transfer Protocol Secure，缩写：HTTPS，常称为HTTP over TLS，HTTP over SSL或HTTP Secure）是一种通过计算机网络进行安全通信的传输协议。HTTPS经由HTTP进行通信，但利用SSL&#x2F;TLS来加密数据包。<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10331.img" alt="Http与Https"></p>
+</blockquote>
+<blockquote>
+<p><strong>SSL</strong>（Secure Socket Layer，安全套接字层）：1994年为 Netscape 所研发，SSL 协议位于 TCP&#x2F;IP 协议与各种应用层协议之间，为数据通讯提供安全支持。</p>
+</blockquote>
+<blockquote>
+<p><strong>TLS</strong>（Transport Layer Security，传输层安全）：其前身是 SSL，它最初的几个版本（SSL 1.0、SSL 2.0、SSL 3.0）由网景公司开发，1999年从 3.1 开始被 IETF 标准化并改名，发展至今已经有 TLS 1.0、TLS 1.1、TLS 1.2 三个版本。SSL3.0和TLS1.0由于存在安全漏洞，已经很少被使用到。TLS 1.3 改动会比较大，目前还在草案阶段，目前使用最广泛的是TLS 1.1、TLS 1.2。</p>
+</blockquote>
+<h3 id="Https"><a href="#Https" class="headerlink" title="Https"></a>Https</h3><p>HTTP 传输面临的巨大的安全问题如下：     </p>
+<ol>
+<li>隐私泄露     </li>
+<li>页面劫持     </li>
+<li>劫持路径及分类</li>
+</ol>
+<h4 id="HTTP-向-HTTPS-演化的过程"><a href="#HTTP-向-HTTPS-演化的过程" class="headerlink" title="HTTP 向 HTTPS 演化的过程"></a>HTTP 向 HTTPS 演化的过程</h4><p>第一步：为了防止上述现象的发生，人们想到一个办法：对传输的信息加密（即使黑客截获，也无法破解）<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10361.img" alt="image"><br>如上图所示，此种方式属于对称加密，双方拥有相同的密钥，信息得到安全传输，但此种方式的缺点是：</p>
+<ol>
+<li>不同的客户端、服务器数量庞大，所以双方都需要维护大量的密钥，维护成本很高</li>
+<li>因每个客户端、服务器的安全级别不同，密钥极易泄露<br>第二步：既然使用对称加密时，密钥维护这么繁琐，那我们就用非对称加密试试</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10439.img" alt="image"></p>
+<p>如上图所示，客户端用公钥对请求内容加密，服务器使用私钥对内容解密，反之亦然，但上述过程也存在缺点：</p>
+<ol>
+<li>公钥是公开的（也就是黑客也会有公钥），所以第 ④ 步私钥加密的信息，如果被黑客截获，其可以使用公钥进行解密，获取其中的内容<br>第三步：非对称加密既然也有缺陷，那我们就将对称加密，非对称加密两者结合起来，取其精华、去其糟粕，发挥两者的各自的优势<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10432.img" alt="image"><br>如上图所示</li>
+<li>第 ③ 步时，客户端说：（咱们后续回话采用对称加密吧，这是对称加密的算法和对称密钥）这段话用公钥进行加密，然后传给服务器</li>
+<li>服务器收到信息后，用私钥解密，提取出对称加密算法和对称密钥后，服务器说：（好的）对称密钥加密</li>
+<li>后续两者之间信息的传输就可以使用对称加密的方式了</li>
+</ol>
+<p>遇到的问题：</p>
+<ol>
+<li>客户端如何获得公钥<br>如何确认服务器是真实的而不是黑客</li>
+</ol>
+<p>第四步：获取公钥与确认服务器身份<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10434.img" alt="image"></p>
+<ol>
+<li><p>获取公钥<br>提供一个下载公钥的地址，回话前让客户端去下载。（缺点：下载地址有可能是假的；客户端每次在回话前都先去下载公钥也很麻烦）<br>回话开始时，服务器把公钥发给客户端（缺点：黑客冒充服务器，发送给客户端假的公钥）</p>
+</li>
+<li><p>那有木有一种方式既可以安全的获取公钥，又能防止黑客冒充呢？   那就需要用到终极武器了：SSL 证书（申购)<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10435.img" alt="image"><br>如上图所示，在第 ② 步时服务器发送了一个SSL证书给客户端，SSL 证书中包含的具体内容有：</p>
+<blockquote>
+<p>证书的发布机构CA<br> 证书的有效期<br> 公钥<br> 证书所有者<br> 签名<br> ………</p>
+</blockquote>
+</li>
+<li><p>客户端在接受到服务端发来的SSL证书时，会对证书的真伪进行校验，以浏览器为例说明如下：  </p>
+<ol>
+<li>首先浏览器读取证书中的证书所有者、有效期等信息进行一一校验</li>
+<li>浏览器开始查找操作系统中已内置的受信任的证书发布机构CA，与服务器发来的证书中的颁发者CA比对，用于校验证书是否为合法机构颁发 </li>
+<li>如果找不到，浏览器就会报错，说明服务器发来的证书是不可信任的。</li>
+<li>如果找到，那么浏览器就会从操作系统中取出  颁发者CA  的公钥，然后对服务器发来的证书里面的签名进行解密</li>
+<li>浏览器使用相同的hash算法计算出服务器发来的证书的hash值，将这个计算的hash值与证书中签名做对比</li>
+<li>对比结果一致，则证明服务器发来的证书合法，没有被冒充</li>
+<li>此时浏览器就可以读取证书中的公钥，用于后续加密了</li>
+</ol>
+</li>
+<li><p>所以通过发送SSL证书的形式，既解决了公钥获取问题，又解决了黑客冒充问题，一箭双雕，HTTPS加密过程也就此形成</p>
+</li>
+</ol>
+<h2 id="Htttp2-0"><a href="#Htttp2-0" class="headerlink" title="Htttp2.0"></a>Htttp2.0</h2><blockquote>
+<p>HTTP&#x2F;2 （原名HTTP&#x2F;2.0）即超文本传输协议 2.0，是下一代HTTP协议。是由互联网工程任务组（IETF）的Hypertext Transfer Protocol Bis (httpbis)工作小组进行开发。是自1999年http1.1发布后的首个更新。HTTP 2.0在2013年8月进行首次合作共事性测试。在开放互联网上HTTP 2.0将只用于 https:&#x2F;&#x2F; 网址，而  http:&#x2F;&#x2F; 网址将继续使用HTTP&#x2F;1，目的是在开放互联网上增加使用加密技术，以提供强有力的保护去遏制主动攻击。DANE RFC6698允许域名管理员不通过第三方CA自行发行证书。</p>
+</blockquote>
+<h3 id="Http2-0的优势；"><a href="#Http2-0的优势；" class="headerlink" title="Http2.0的优势；"></a>Http2.0的优势；</h3><ul>
+<li><p><strong>提升web的性能</strong>，在与 HTTP&#x2F;1.1 完全语义兼容的基础上，进一步减少了网络延迟<br>  <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10505.img" alt="web性能对比"><br>  <a href="https://link.zhihu.com/?target=https://http2.akamai.com/demo">HTTP&#x2F;2: the Future of the Internet</a> 这是 Akamai 公司建立的一个官方的演示，用以说明 HTTP&#x2F;2 相比于之前的 HTTP&#x2F;1.1 在性能上的大幅度提升。 同时请求 379 张图片，从Load time 的对比可以看出 HTTP&#x2F;2 在速度上的优势。<br>  <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10507.img" alt="延时问题"><br>  使用chrome的开发工具的操作时，可以明显发现Http1.0的延时问题比较。</p>
+</li>
+<li><p><strong>多路复用 (Multiplexing)</strong> </p>
+<blockquote>
+<p>多路复用允许同时通过单一的 HTTP&#x2F;2 连接发起多重的请求-响应消息。</p>
+</blockquote>
+<p>  众所周知 ，在 HTTP&#x2F;1.1 协议中 「浏览器客户端在同一时间，针对同一域名下的请求有一定数量限制。超过限制数目的请求会被阻塞」。<br>  <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10526.img" alt="image"><br>  HTTP&#x2F;2 的多路复用(Multiplexing) 则允许同时通过单一的 HTTP&#x2F;2 连接发起多重的请求-响应;因此 HTTP&#x2F;2 可以很容易的去实现多流并行而不用依赖建立多个 TCP 连接，HTTP&#x2F;2 把 HTTP 协议通信的基本单位缩小为一个一个的帧，这些帧对应着逻辑流中的消息。并行地在同一个 TCP 连接上;<strong>往往有效的解决了统一域名请求限制阻塞问题</strong>。</p>
+</li>
+<li><p>**二进制分帧 **<br>  在二进制分帧层中， HTTP&#x2F;2 会将所有传输的信息分割为更小的消息和帧（frame）,并对它们采用二进制格式的编码 ，其中 HTTP1.x 的首部信息会被封装到 HEADER frame，而相应的 Request Body 则封装到 DATA frame 里面。<br>  ++HTTP&#x2F;2 通信都在一个连接上完成，这个连接可以承载任意数量的双向数据流++。<br>  在过去， HTTP 性能优化的关键并不在于高带宽，而是低延迟。TCP 连接会随着时间进行自我「调谐」，起初会限制连接的最大速度，如果数据成功传输，会随着时间的推移提高传输的速度。这种调谐则被称为 TCP 慢启动。由于这种原因，让原本就具有突发性和短时性的 HTTP 连接变的十分低效。<br>  <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10566.img" alt="image"><br>  <strong>总结</strong>：</p>
+<ul>
+<li>单连接多资源的方式，减少服务端的链接压力,内存占用更少,连接吞吐量更大</li>
+<li>由于 TCP 连接的减少而使网络拥塞状况得以改善，同时慢启动时间的减少,使拥塞和丢包恢复速度更快</li>
+</ul>
+</li>
+<li><p><strong>首部压缩（Header Compression）</strong><br>  HTTP&#x2F;1.1并不支持 HTTP 首部压缩，为此 SPDY 和 HTTP&#x2F;2 应运而生， SPDY 使用的是通用的DEFLATE 算法，而 HTTP&#x2F;2 则使用了专门为首部压缩而设计的 HPACK 算法。<br>  <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10606.png" alt="image">   </p>
+</li>
+<li><p><strong>服务端推送</strong><br>  服务端推送是一种在客户端请求之前发送数据的机制。在 HTTP&#x2F;2 中，服务器可以对客户端的一个请求发送多个响应。Server Push 让 HTTP1.x 时代使用内嵌资源的优化手段变得没有意义；如果一个请求是由你的主页发起的，服务器很可能会响应主页内容、logo 以及样式表，因为它知道客户端会用到这些东西。这相当于在一个 HTML 文档内集合了所有的资源，不过与之相比，服务器推送还有一个很大的优势：可以缓存！也让在遵循同源的情况下，不同页面之间可以共享缓存资源成为可能。<br>  <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89.md/10612.png" alt="image"></p>
+</li>
+</ul>
+<h3 id="HTTPS、SPDY和HTTP-2的性能比较"><a href="#HTTPS、SPDY和HTTP-2的性能比较" class="headerlink" title="HTTPS、SPDY和HTTP&#x2F;2的性能比较"></a>HTTPS、SPDY和HTTP&#x2F;2的性能比较</h3><ul>
+<li>请参见博文<a target="_blank" rel="noopener" href="http://www.infoq.com/cn/news/2015/02/https-spdy-http2-comparison">《HTTPS、SPDY和HTTP&#x2F;2的性能比较》</a></li>
+</ul>
+<p>文章到此，基本介绍个人同样推荐文章<a target="_blank" rel="noopener" href="https://www.nihaoshijie.com.cn/index.php/archives/630/">《HTTP,HTTP2.0,SPDY,HTTPS看这篇就够了》</a>；并非推荐但是感觉总结也不错。个人的文章感觉搬砖感觉更多（加油！）</p>
+<hr>
+<p>参考内容：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/effff1efd210">图解http，http基础知识</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/TomSnail/p/6078395.html">HTTP学习一：HTTP基础知识</a></li>
+<li><a target="_blank" rel="noopener" href="https://hit-alibaba.github.io/interview/basic/network/HTTP.html">HTTP的特性(笔试)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/27395037">HTTPS系列干货（一）：HTTPS 原理详解 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE">超文本传输安全协议 wiki</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.nihaoshijie.com.cn/index.php/archives/630/">HTTP,HTTP2.0,SPDY,HTTPS看这篇就够了  博文</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/34074946">HTTP&#x2F;2.0 相比1.0有哪些重大改进？ 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/news/2015/02/https-spdy-http2-comparison">HTTPS、SPDY和HTTP&#x2F;2的性能比较 文摘</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://will-we.gitee.io">will-we</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://will-we.gitee.io/2018/05/05/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89/">http://will-we.gitee.io/2018/05/05/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E5%90%8E%E7%AB%AF/">后端</a></div><div class="post_share"><div class="social-share" data-image="/uploads/avatar.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/03/02/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89/" title="spring-boot项目的docker集成化部署（一）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">spring-boot项目的docker集成化部署（一）</div></div></a></div><div class="next-post pull-right"><a href="/2018/05/05/%E5%8E%9F%E5%88%9B-Spring%E6%BA%90%E7%A0%81%E6%95%99%E7%A8%8B02-Spring%E7%9A%84IoC%E5%AE%B9%E5%99%A8%E5%88%86%E6%9E%90/" title="[原创]Spring源码教程02--Spring的IoC容器分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">[原创]Spring源码教程02--Spring的IoC容器分析</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2018/01/20/%E5%8E%9F%E5%88%9B-Spring%E6%95%99%E7%A8%8B01-Spring%E5%BC%80%E5%A7%8B%E7%AF%87-Helloworld/" title="[原创]Spring教程01--Spring开始篇_Helloworld"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-01-20</div><div class="title">[原创]Spring教程01--Spring开始篇_Helloworld</div></div></a></div><div><a href="/2018/05/05/%E5%8E%9F%E5%88%9B-Spring%E6%BA%90%E7%A0%81%E6%95%99%E7%A8%8B02-Spring%E7%9A%84IoC%E5%AE%B9%E5%99%A8%E5%88%86%E6%9E%90/" title="[原创]Spring源码教程02--Spring的IoC容器分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-05-05</div><div class="title">[原创]Spring源码教程02--Spring的IoC容器分析</div></div></a></div><div><a href="/2017/11/02/005%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%AD%A6Python%EF%BC%9APython3-%E6%A8%A1%E5%9D%97-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="005零基础学Python：Python3 模块--学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2017-11-02</div><div class="title">005零基础学Python：Python3 模块--学习笔记</div></div></a></div><div><a href="/2017/05/09/001%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%AD%A6Python%EF%BC%9APython%E7%AE%80%E4%BB%8B%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%8C%E5%BC%80%E5%A7%8Bhelloworld/" title="001零基础学Python：Python简介（一），开始helloworld"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2017-05-09</div><div class="title">001零基础学Python：Python简介（一），开始helloworld</div></div></a></div><div><a href="/2017/04/09/%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%88%A9%E5%99%A8%EF%BC%9ASublime-Text3-%EF%BC%8C%E5%AE%8C%E5%85%A8%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97/" title="文本编辑利器：Sublime Text3 ，完全操作指南"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2017-04-09</div><div class="title">文本编辑利器：Sublime Text3 ，完全操作指南</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/uploads/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">will-we</div><div class="author-info__description">吾心安处 即是吾乡；欢迎来到我的小窝，这是一个有趣的地方</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">HTTP介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.1.</span> <span class="toc-text">基础概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%88%E6%9C%AC"><span class="toc-number">1.1.2.</span> <span class="toc-text">版本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.</span> <span class="toc-text">HTTP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#URL%E4%B8%8E%E8%B5%84%E6%BA%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">URL与资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#URI%E3%80%81URL%E5%92%8CURN"><span class="toc-number">1.2.2.</span> <span class="toc-text">URI、URL和URN</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AA%92%E4%BD%93%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.3.</span> <span class="toc-text">媒体类型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.3.</span> <span class="toc-text">协议介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE%E6%A0%88"><span class="toc-number">1.3.1.</span> <span class="toc-text">协议栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.2.</span> <span class="toc-text">协议工作流程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E6%8A%A5%E6%96%87"><span class="toc-number">1.4.</span> <span class="toc-text">HTTP报文</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%A5%E6%96%87"><span class="toc-number">1.4.1.</span> <span class="toc-text">报文</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5"><span class="toc-number">1.4.2.</span> <span class="toc-text">首部字段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E4%BD%93"><span class="toc-number">1.4.3.</span> <span class="toc-text">实体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.4.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#GET"><span class="toc-number">1.4.4.1.</span> <span class="toc-text">GET</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#POST"><span class="toc-number">1.4.4.2.</span> <span class="toc-text">POST</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HEAD"><span class="toc-number">1.4.4.3.</span> <span class="toc-text">HEAD</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PUT-TRACE-OPTIONS-DELETE"><span class="toc-number">1.4.4.4.</span> <span class="toc-text">PUT&#x2F;TRACE&#x2F;OPTIONS&#x2F;DELETE</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%89%A9%E5%B1%95%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.4.5.</span> <span class="toc-text">其他扩展方法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-number">1.4.5.</span> <span class="toc-text">状态码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Https%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">Https的基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Https"><span class="toc-number">2.1.</span> <span class="toc-text">Https</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-%E5%90%91-HTTPS-%E6%BC%94%E5%8C%96%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">HTTP 向 HTTPS 演化的过程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Htttp2-0"><span class="toc-number">3.</span> <span class="toc-text">Htttp2.0</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Http2-0%E7%9A%84%E4%BC%98%E5%8A%BF%EF%BC%9B"><span class="toc-number">3.1.</span> <span class="toc-text">Http2.0的优势；</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTPS%E3%80%81SPDY%E5%92%8CHTTP-2%E7%9A%84%E6%80%A7%E8%83%BD%E6%AF%94%E8%BE%83"><span class="toc-number">3.2.</span> <span class="toc-text">HTTPS、SPDY和HTTP&#x2F;2的性能比较</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/11/14/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" title="你分库分表的姿势对么？——详谈水平分库分表">你分库分表的姿势对么？——详谈水平分库分表</a><time datetime="2021-11-14T08:45:31.440Z" title="Created 2021-11-14 16:45:31">2021-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/11/14/Java%20%E8%BF%9B%E9%98%B6%E8%B7%AF%E7%BA%BF%E5%9B%BE/" title="Java进阶路线图">Java进阶路线图</a><time datetime="2021-11-14T06:58:00.986Z" title="Created 2021-11-14 14:58:00">2021-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/02/17/%5B%E8%BD%AC%E8%BD%BD%5D%E8%8A%8B%E9%81%93%20Soul%20%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8%EF%BC%88%E5%9B%BD%E4%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3%EF%BC%89/" title="Soul 极简入门（国产微服务网关）">Soul 极简入门（国产微服务网关）</a><time datetime="2021-02-17T08:33:16.109Z" title="Created 2021-02-17 16:33:16">2021-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2020/09/30/Spring5.3%20%E6%BA%90%E7%A0%81%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="Spring5.3 源码环境搭建">Spring5.3 源码环境搭建</a><time datetime="2020-09-30T13:28:47.425Z" title="Created 2020-09-30 21:28:47">2020-09-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2020/01/01/Spring-Cloud-Alibaba%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89Nacos%E5%88%9D%E8%AF%86/" title="Spring Cloud Alibaba系列教程（一）Nacos初识">Spring Cloud Alibaba系列教程（一）Nacos初识</a><time datetime="2020-01-01T15:17:33.000Z" title="Created 2020-01-01 23:17:33">2020-01-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By will-we</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

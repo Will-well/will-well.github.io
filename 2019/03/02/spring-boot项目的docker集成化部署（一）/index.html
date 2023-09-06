@@ -1,0 +1,358 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>spring-boot项目的docker集成化部署（一） | will-well</title><meta name="author" content="will-we"><meta name="copyright" content="will-we"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="spring-boot项目的docker集成化部署[toc] 前言 据说流行的微服务和docker一起，更配哦！接下来，使用简单spring-boot项目演示docker的集成化部署的案例，在看过微笑的博客觉得不过瘾，自己动手，下面的方案与Devops的方式比较接近；希望搭建理解这种思路。  基本思路与方案  开发者push到git服务器 Jenkins通过触发器收到通知 Jenkins克隆工">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring-boot项目的docker集成化部署（一）">
+<meta property="og:url" content="http://will-we.gitee.io/2019/03/02/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="will-well">
+<meta property="og:description" content="spring-boot项目的docker集成化部署[toc] 前言 据说流行的微服务和docker一起，更配哦！接下来，使用简单spring-boot项目演示docker的集成化部署的案例，在看过微笑的博客觉得不过瘾，自己动手，下面的方案与Devops的方式比较接近；希望搭建理解这种思路。  基本思路与方案  开发者push到git服务器 Jenkins通过触发器收到通知 Jenkins克隆工">
+<meta property="og:locale">
+<meta property="og:image" content="http://will-we.gitee.io/uploads/avatar.png">
+<meta property="article:published_time" content="2019-03-02T14:59:09.000Z">
+<meta property="article:modified_time" content="2023-09-02T06:09:15.551Z">
+<meta property="article:author" content="will-we">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://will-we.gitee.io/uploads/avatar.png"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://will-we.gitee.io/2019/03/02/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'spring-boot项目的docker集成化部署（一）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-02 14:09:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/uploads/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="will-well"><span class="site-name">will-well</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">spring-boot项目的docker集成化部署（一）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2019-03-02T14:59:09.000Z" title="Created 2019-03-02 22:59:09">2019-03-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-09-02T06:09:15.551Z" title="Updated 2023-09-02 14:09:15">2023-09-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="spring-boot项目的docker集成化部署（一）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><span id="more"></span>
+
+<h1 id="spring-boot项目的docker集成化部署"><a href="#spring-boot项目的docker集成化部署" class="headerlink" title="spring-boot项目的docker集成化部署"></a>spring-boot项目的docker集成化部署</h1><p>[toc]</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>据说流行的微服务和docker一起，更配哦！接下来，使用简单spring-boot项目演示docker的集成化部署的案例，在看过微笑的博客觉得不过瘾，自己动手，下面的方案与Devops的方式比较接近；希望搭建理解这种思路。</p>
+</blockquote>
+<h2 id="基本思路与方案"><a href="#基本思路与方案" class="headerlink" title="基本思路与方案"></a>基本思路与方案</h2><p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/166451caca572083.png" alt="docker化的流程图1"></p>
+<ol>
+<li>开发者<code>push</code>到<code>git服务器</code></li>
+<li>Jenkins通过<code>触发器</code>收到通知</li>
+<li>Jenkins克隆工作区</li>
+<li>Jenkins创建一个Docker镜像（注意：这是用<code>maven的docker插件</code>）</li>
+<li>Jenkins将镜像推到Docker Hub<blockquote>
+<p>借鉴图片</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/166451caca49acea.png" alt="docker化的流程图2"></p>
+</blockquote>
+<h2 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h2><h3 id="准备源码"><a href="#准备源码" class="headerlink" title="准备源码"></a>准备源码</h3><p>Github路径：<a target="_blank" rel="noopener" href="https://gitee.com/will-we/spring-boot_docker_demo">spring-boot_docker_demo</a></p>
+<blockquote>
+<p>说明：这里使用com.spotify的docker-maven-plugin的插件；用法参阅代码注释。</p>
+</blockquote>
+<h3 id="服务器和基础环境"><a href="#服务器和基础环境" class="headerlink" title="服务器和基础环境"></a>服务器和基础环境</h3><h4 id="Linux下Java8安装"><a href="#Linux下Java8安装" class="headerlink" title="Linux下Java8安装"></a>Linux下Java8安装</h4><h5 id="1-下载"><a href="#1-下载" class="headerlink" title="1. 下载"></a>1. 下载</h5><pre><code>wget --no-cookies \
+--no-check-certificate \
+--header &quot;Cookie: oraclelicense=accept-securebackup-cookie&quot; \
+http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz \
+-O jdk-8-linux-x64.tar.gz
+</code></pre>
+<h5 id="2-解压安装"><a href="#2-解压安装" class="headerlink" title="2. 解压安装"></a>2. 解压安装</h5><pre><code>tar -zxvf jdk-8-linux-x64.tar.gz
+mv jdk-8-linux-x64.tar.gz /usr/local
+</code></pre>
+<h5 id="3-配置环境变量"><a href="#3-配置环境变量" class="headerlink" title="3. 配置环境变量"></a>3. 配置环境变量</h5><pre><code>export JAVA_HOME=/usr/local/jdk1.8.0_181/
+export PATH=$PATH:$JAVA_HOME
+export JAVA_HOME=/usr/local/jdk1.8.0_181/
+export JRE_HOME=$JAVA_HOME/jre                 #tomcat需要
+export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+</code></pre>
+<h5 id="4-刷新环境变量"><a href="#4-刷新环境变量" class="headerlink" title="4. 刷新环境变量"></a>4. 刷新环境变量</h5><pre><code>source  /etc/profile #刷新环境变量
+2.1.3.2.3	Linux下Manven安装 
+</code></pre>
+<h4 id="maven的安装"><a href="#maven的安装" class="headerlink" title="maven的安装"></a>maven的安装</h4><h5 id="1-下载maven"><a href="#1-下载maven" class="headerlink" title="1. 下载maven"></a>1. 下载maven</h5><pre><code>wget http://mirrors.cnnic.cn/apache/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz
+</code></pre>
+<h5 id="2-安装"><a href="#2-安装" class="headerlink" title="2.  安装"></a>2.  安装</h5><pre><code>tar -zxvf apache-maven-3.5.0-bin.tar.gz
+mv apache-maven-3.5.4 /usr/local/maven/apache-maven-3.5.4
+</code></pre>
+<h5 id="3-配置环境变量-1"><a href="#3-配置环境变量-1" class="headerlink" title="3. 配置环境变量"></a>3. 配置环境变量</h5><pre><code>export MAVEN_HOME=/usr/local/maven/apache-maven-3.5.4
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$MAVEN_HOME/bin:$PATH #注意这里添加$MAVEN_HOME/bin
+</code></pre>
+<h5 id="4-刷新环境变量-1"><a href="#4-刷新环境变量-1" class="headerlink" title="4. 刷新环境变量"></a>4. 刷新环境变量</h5><pre><code>source  /etc/profile #刷新环境变量
+</code></pre>
+<h4 id="安装Jenkins"><a href="#安装Jenkins" class="headerlink" title="安装Jenkins"></a>安装Jenkins</h4><blockquote>
+<p>Jenkins安装有三种方式</p>
+</blockquote>
+<h5 id="1-基于Docker的安装"><a href="#1-基于Docker的安装" class="headerlink" title="1. 基于Docker的安装"></a>1. 基于Docker的安装</h5><pre><code>docker run \
+  -u root \
+  --rm \
+  -d \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  -v jenkins-data:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkinsci/blueocean
+</code></pre>
+<h5 id="2-基于war包方式"><a href="#2-基于war包方式" class="headerlink" title="2. 基于war包方式"></a>2. 基于war包方式</h5><blockquote>
+<p>在官网下载，放入Tomcat的目录中即可；打war，大家肯定十分熟悉的操作。</p>
+</blockquote>
+<h5 id="3-使用yum方式直接安装-（推荐）"><a href="#3-使用yum方式直接安装-（推荐）" class="headerlink" title="3. 使用yum方式直接安装 （推荐）"></a>3. 使用yum方式直接安装 （推荐）</h5><h6 id="1-下载-1"><a href="#1-下载-1" class="headerlink" title="1.下载"></a>1.下载</h6><pre><code>sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo 
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key  
+</code></pre>
+<h6 id="2-安装-1"><a href="#2-安装-1" class="headerlink" title="2.安装"></a>2.安装</h6><pre><code>yum install jenkins
+</code></pre>
+<h6 id="3-配置"><a href="#3-配置" class="headerlink" title="3. 配置"></a>3. 配置</h6><pre><code>vi /etc/sysconfig/jenkins
+</code></pre>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E4%BF%AE%E6%94%B9jenkins%E7%9A%84_1538733645_20157.png" alt="修改Jenkins的配置端口和登录用户"></p>
+<blockquote>
+<p>可避免避免和<code>Tomcat</code>端口重复的问题</p>
+</blockquote>
+<h6 id="4-启动服务"><a href="#4-启动服务" class="headerlink" title="4. 启动服务"></a>4. 启动服务</h6><pre><code>service jenkins start
+</code></pre>
+<h5 id="Jenkins的基本初始化"><a href="#Jenkins的基本初始化" class="headerlink" title="Jenkins的基本初始化"></a>Jenkins的基本初始化</h5><h6 id="1-登录"><a href="#1-登录" class="headerlink" title="1. 登录"></a>1. 登录</h6><p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E7%99%BB%E5%BD%95_1538733778_8467.png" alt="登录"></p>
+<h6 id="2-安装Jenkins插件"><a href="#2-安装Jenkins插件" class="headerlink" title="2. 安装Jenkins插件"></a>2. 安装Jenkins插件</h6><p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E5%AE%89%E8%A3%85%E6%8E%A8%E8%8D%90%E6%8F%92%E4%BB%B6_1538733819_24609.png" alt="安装推荐插件"></p>
+<h6 id="3-安装成功"><a href="#3-安装成功" class="headerlink" title="3.安装成功"></a>3.安装成功</h6><blockquote>
+<p>基本按照推荐来<br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E9%A6%96%E9%A1%B5_1538733892_31287.png" alt="首页"></p>
+</blockquote>
+<h6 id="4-配置jdk和maven配置"><a href="#4-配置jdk和maven配置" class="headerlink" title="4. 配置jdk和maven配置"></a>4. 配置jdk和maven配置</h6><p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E9%85%8D%E7%BD%AEjdk%E5%92%8Cmave_1538734092_31203.png" alt="配置jdk和maven"></p>
+<blockquote>
+<p>说明这里其实<code>git</code>非必须，之前的插件安装中安装了</p>
+</blockquote>
+<h5 id="Pipeline语法"><a href="#Pipeline语法" class="headerlink" title="Pipeline语法"></a>Pipeline语法</h5><blockquote>
+<p>语法请自行查阅资料，这里使用groovy的语法    </p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://testerhome.com/topics/10033">devops [持续交付实践] pipeline：pipeline 使用之语法详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://jenkins.io/doc/book/pipeline/">Jenkins语法</a></li>
+</ul>
+<h5 id="Jenkins的项目配置"><a href="#Jenkins的项目配置" class="headerlink" title="Jenkins的项目配置"></a>Jenkins的项目配置</h5><h6 id="1-新建pipeline的项目"><a href="#1-新建pipeline的项目" class="headerlink" title="1. 新建pipeline的项目"></a>1. 新建pipeline的项目</h6><h6 id="2-添加如下jekins的脚本内容：注意：使用pipeline的语言"><a href="#2-添加如下jekins的脚本内容：注意：使用pipeline的语言" class="headerlink" title="2. 添加如下jekins的脚本内容：注意：使用pipeline的语言"></a>2. 添加如下jekins的脚本内容：注意：使用pipeline的语言</h6><pre><code>#!groovy
+pipeline&#123;
+    agent any
+
+    environment &#123;
+        REPOSITORY=&quot;https://gitee.com/will-we/spring-boot_docker_demo.git&quot;
+    &#125;
+    tools &#123;
+        maven &#39;m3&#39;
+        jdk &#39;java8&#39;
+    &#125;
+    stages &#123;
+        stage(&#39;获取代码&#39;)&#123;
+            steps &#123;
+                echo &quot;start fetch code from git:$&#123;REPOSITORY&#125;&quot;
+                //清空当前目录
+                deleteDir()
+                //拉去代码	
+                git &quot;$&#123;REPOSITORY&#125;&quot;
+            &#125;
+        &#125;
+        stage(&#39;代码静态检查&#39;)&#123;
+            steps &#123;
+                //伪代码检查
+                echo &quot;start code check&quot;
+            &#125;
+        &#125;		
+        stage(&#39;编译+单元测试&#39;)&#123;
+            steps &#123;
+                echo &quot;start compile&quot;
+                //切换目录
+                sh &#39;mvn -Dmaven.test.skip=true -U clean install&#39;
+            &#125;
+        &#125;
+        stage(&#39;构建镜像&#39;)&#123;
+            steps &#123;
+                echo &quot;start build image&quot;
+                //build镜像
+                sh &#39;mvn clean package docker:build&#39;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h6 id="3-立即构建”，查看运行的日子如下："><a href="#3-立即构建”，查看运行的日子如下：" class="headerlink" title="3.  立即构建”，查看运行的日子如下："></a>3.  立即构建”，查看运行的日子如下：</h6><p> <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E6%97%A5%E5%BF%97_1538734522_22024.png" alt="日志"></p>
+<h6 id="4-如果看上面的恭喜你，构建镜像成功；参看docker的镜像，对你“so-easy”"><a href="#4-如果看上面的恭喜你，构建镜像成功；参看docker的镜像，对你“so-easy”" class="headerlink" title="4.  如果看上面的恭喜你，构建镜像成功；参看docker的镜像，对你“so easy”"></a>4.  如果看上面的恭喜你，构建镜像成功；参看docker的镜像，对你“so easy”</h6><p> <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E6%9F%A5%E7%9C%8Bdocker%E7%9A%84%E9%95%9C_1538734566_8524.png" alt="查看docker的镜像"></p>
+<h6 id="5-启动docker容器"><a href="#5-启动docker容器" class="headerlink" title="5. 启动docker容器"></a>5. 启动docker容器</h6><pre><code># 最好添加--name参数
+docker run --name= springboot/spring-boot_docker_demo -p 8081:8080 -t srping-demo
+</code></pre>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E5%90%AF%E5%8A%A8%E6%97%A5%E5%BF%97_1538734731_23737.png" alt="启动日志"><br><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E5%90%AF%E5%8A%A8docker_1538734598_3294.png" alt="启动docker"></p>
+<h4 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h4><h5 id="1-Jenkins构建时出现：“mvn-command-not-found”"><a href="#1-Jenkins构建时出现：“mvn-command-not-found”" class="headerlink" title="1. Jenkins构建时出现：“mvn: command not found”"></a>1. Jenkins构建时出现：“mvn: command not found”</h5><p> <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E6%8A%A5%E9%94%99%E6%97%A5%E5%BF%97_1538734777_1374.png" alt="报错日志"><br>解决方案：</p>
+<blockquote>
+<p>自己试着摸着石头过河，只能借助搜索引擎了；如下是解决的流程：</p>
+</blockquote>
+<p>1）	安装Pipeline Maven Integration插件<br> <img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/166451cb5888e36f.png"><br>2）	检查环境变量</p>
+<blockquote>
+<p>上面安装了插件后依旧不好使，继续找原因吧，Maven not found in Jenkins【StackOverflow】有着这个题问题：原因如下：<br>The reason is that Jenkins is installed and run as a ‚system user‘ service. This means the process can‘t see the ENV variables and PATH of your user (user level). Setting up maven in PATH and ENV variables on system level makes the trick.<br>大体意思是：jekins的无法读取系统的环境变量；于是分别查看了大致的服务器和jekins的变量。<br>Jenkins	服务器&#x2F;bin&#x2F;bash</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8Cjenkin_1538734928_8938.png" alt="服务器和Jenkins的对比"></p>
+<p>3）	Jenkins导入java和maven的权限</p>
+<blockquote>
+<p>还记得之前配置Jdk和maven的“全局工具设置”，注意：这里设置也是依旧不能直接读取，需要如下方式引入；“m3”是配置时名称，“java8”也是配置名称。</p>
+</blockquote>
+<pre><code>    tools &#123;
+        maven &#39;m3&#39;
+        jdk &#39;java8&#39;
+    &#125;
+</code></pre>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89.md/166451cb6201cac8.png"></p>
+<h5 id="2-Linux中端口占用问题"><a href="#2-Linux中端口占用问题" class="headerlink" title="2. Linux中端口占用问题"></a>2. Linux中端口占用问题</h5><pre><code>#方式一：参看端口8080信息
+netstat -lnp | grep 8080
+#方式二：参看端口8080信息
+lsof -i :808
+#杀死进程
+kill -9 pid号
+</code></pre>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><h3 id="1-本文总结："><a href="#1-本文总结：" class="headerlink" title="1. 本文总结："></a>1. 本文总结：</h3><blockquote>
+<p>我们使用了一个简单的<code>spring-boot</code>项目部署到远程服务器的操作流程，从而实现了推送代码到Git远程仓库，使用jekins的集成化构建docker实现，自动化部署方式。</p>
+</blockquote>
+<h3 id="2-后期优化："><a href="#2-后期优化：" class="headerlink" title="2. 后期优化："></a>2. 后期优化：</h3><blockquote>
+<p>演示spring-boot的简单部署方式，其实该项目的还有很多地方优化，例如：<code>doker push</code>docker的仓库、使用<code>Jenkins</code>的触发器<code>git hook</code>等；以及后期；spring-boot的多模块、以及<code>docker compose</code>的使用等。由于篇幅的原因可能放在了后面的文章。</p>
+</blockquote>
+<hr>
+<p>参考资料</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://niocoder.com/2018/04/22/SpringBoot+Docker+Git+Jenkins%E5%AE%9E%E7%8E%B0%E7%AE%80%E6%98%93%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%92%8C%E9%83%A8%E7%BD%B2/">SpringBoot+Docker+Git+Jenkins实现简易的持续集成和持续部署</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.51cto.com/ityouknow/2088355">Spring Boot 2.0(四)：使用 Docker 部署 Spring Boot</a><a target="_blank" rel="noopener" href="https://blog.csdn.net/aixiaoyang168/article/details/77453974">Maven 插件之 docker-maven-plugin 的使用</a></li>
+<li><a target="_blank" rel="noopener" href="http://dockone.io/article/1735">部署流水线搭建小记：Docker、Jenkins、Java和Couchbase</a></li>
+</ul>
+<p><strong>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</strong></p>
+<ul>
+<li>个人博客：<a href="will-we.com">will-we.com</a></li>
+<li>我的掘金：<a target="_blank" rel="noopener" href="https://juejin.im/user/5a63058b518825732646e4ed">weir</a></li>
+<li>我的简书：<a target="_blank" rel="noopener" href="https://www.jianshu.com/u/26b9661e9e78">weir</a></li>
+</ul>
+<p><strong>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://will-we.gitee.io">will-we</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://will-we.gitee.io/2019/03/02/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89/">http://will-we.gitee.io/2019/03/02/spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B8%80%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/uploads/avatar.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/01/01/Spring-Cloud-Alibaba%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89Nacos%E5%88%9D%E8%AF%86/" title="Spring Cloud Alibaba系列教程（一）Nacos初识"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Spring Cloud Alibaba系列教程（一）Nacos初识</div></div></a></div><div class="next-post pull-right"><a href="/2018/05/05/01-Http%E3%80%81Https%E3%80%81Http2-0-%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E7%AF%87%EF%BC%89/" title="01_Http、Https、Http2.0 的基础知识总结（持续更新篇）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">01_Http、Https、Http2.0 的基础知识总结（持续更新篇）</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/uploads/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">will-we</div><div class="author-info__description">吾心安处 即是吾乡；欢迎来到我的小窝，这是一个有趣的地方</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#spring-boot%E9%A1%B9%E7%9B%AE%E7%9A%84docker%E9%9B%86%E6%88%90%E5%8C%96%E9%83%A8%E7%BD%B2"><span class="toc-number">1.</span> <span class="toc-text">spring-boot项目的docker集成化部署</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF%E4%B8%8E%E6%96%B9%E6%A1%88"><span class="toc-number">1.2.</span> <span class="toc-text">基本思路与方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.3.</span> <span class="toc-text">基本步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E6%BA%90%E7%A0%81"><span class="toc-number">1.3.1.</span> <span class="toc-text">准备源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83"><span class="toc-number">1.3.2.</span> <span class="toc-text">服务器和基础环境</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux%E4%B8%8BJava8%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">Linux下Java8安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E4%B8%8B%E8%BD%BD"><span class="toc-number">1.3.2.1.1.</span> <span class="toc-text">1. 下载</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E8%A7%A3%E5%8E%8B%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.2.1.2.</span> <span class="toc-text">2. 解压安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">1.3.2.1.3.</span> <span class="toc-text">3. 配置环境变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-%E5%88%B7%E6%96%B0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">1.3.2.1.4.</span> <span class="toc-text">4. 刷新环境变量</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#maven%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">maven的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E4%B8%8B%E8%BD%BDmaven"><span class="toc-number">1.3.2.2.1.</span> <span class="toc-text">1. 下载maven</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.2.2.2.</span> <span class="toc-text">2.  安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-1"><span class="toc-number">1.3.2.2.3.</span> <span class="toc-text">3. 配置环境变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-%E5%88%B7%E6%96%B0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-1"><span class="toc-number">1.3.2.2.4.</span> <span class="toc-text">4. 刷新环境变量</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Jenkins"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">安装Jenkins</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E5%9F%BA%E4%BA%8EDocker%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.2.3.1.</span> <span class="toc-text">1. 基于Docker的安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E5%9F%BA%E4%BA%8Ewar%E5%8C%85%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.2.3.2.</span> <span class="toc-text">2. 基于war包方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8yum%E6%96%B9%E5%BC%8F%E7%9B%B4%E6%8E%A5%E5%AE%89%E8%A3%85-%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.3.2.3.3.</span> <span class="toc-text">3. 使用yum方式直接安装 （推荐）</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-%E4%B8%8B%E8%BD%BD-1"><span class="toc-number">1.3.2.3.3.1.</span> <span class="toc-text">1.下载</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85-1"><span class="toc-number">1.3.2.3.3.2.</span> <span class="toc-text">2.安装</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.2.3.3.3.</span> <span class="toc-text">3. 配置</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.3.2.3.3.4.</span> <span class="toc-text">4. 启动服务</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Jenkins%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.3.2.3.4.</span> <span class="toc-text">Jenkins的基本初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-%E7%99%BB%E5%BD%95"><span class="toc-number">1.3.2.3.4.1.</span> <span class="toc-text">1. 登录</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85Jenkins%E6%8F%92%E4%BB%B6"><span class="toc-number">1.3.2.3.4.2.</span> <span class="toc-text">2. 安装Jenkins插件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="toc-number">1.3.2.3.4.3.</span> <span class="toc-text">3.安装成功</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4-%E9%85%8D%E7%BD%AEjdk%E5%92%8Cmaven%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.2.3.4.4.</span> <span class="toc-text">4. 配置jdk和maven配置</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Pipeline%E8%AF%AD%E6%B3%95"><span class="toc-number">1.3.2.3.5.</span> <span class="toc-text">Pipeline语法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Jenkins%E7%9A%84%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.2.3.6.</span> <span class="toc-text">Jenkins的项目配置</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-%E6%96%B0%E5%BB%BApipeline%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="toc-number">1.3.2.3.6.1.</span> <span class="toc-text">1. 新建pipeline的项目</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-%E6%B7%BB%E5%8A%A0%E5%A6%82%E4%B8%8Bjekins%E7%9A%84%E8%84%9A%E6%9C%AC%E5%86%85%E5%AE%B9%EF%BC%9A%E6%B3%A8%E6%84%8F%EF%BC%9A%E4%BD%BF%E7%94%A8pipeline%E7%9A%84%E8%AF%AD%E8%A8%80"><span class="toc-number">1.3.2.3.6.2.</span> <span class="toc-text">2. 添加如下jekins的脚本内容：注意：使用pipeline的语言</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-%E7%AB%8B%E5%8D%B3%E6%9E%84%E5%BB%BA%E2%80%9D%EF%BC%8C%E6%9F%A5%E7%9C%8B%E8%BF%90%E8%A1%8C%E7%9A%84%E6%97%A5%E5%AD%90%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="toc-number">1.3.2.3.6.3.</span> <span class="toc-text">3.  立即构建”，查看运行的日子如下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4-%E5%A6%82%E6%9E%9C%E7%9C%8B%E4%B8%8A%E9%9D%A2%E7%9A%84%E6%81%AD%E5%96%9C%E4%BD%A0%EF%BC%8C%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F%E6%88%90%E5%8A%9F%EF%BC%9B%E5%8F%82%E7%9C%8Bdocker%E7%9A%84%E9%95%9C%E5%83%8F%EF%BC%8C%E5%AF%B9%E4%BD%A0%E2%80%9Cso-easy%E2%80%9D"><span class="toc-number">1.3.2.3.6.4.</span> <span class="toc-text">4.  如果看上面的恭喜你，构建镜像成功；参看docker的镜像，对你“so easy”</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#5-%E5%90%AF%E5%8A%A8docker%E5%AE%B9%E5%99%A8"><span class="toc-number">1.3.2.3.6.5.</span> <span class="toc-text">5. 启动docker容器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">问题解决</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-Jenkins%E6%9E%84%E5%BB%BA%E6%97%B6%E5%87%BA%E7%8E%B0%EF%BC%9A%E2%80%9Cmvn-command-not-found%E2%80%9D"><span class="toc-number">1.3.2.4.1.</span> <span class="toc-text">1. Jenkins构建时出现：“mvn: command not found”</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-Linux%E4%B8%AD%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.2.4.2.</span> <span class="toc-text">2. Linux中端口占用问题</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">1.4.</span> <span class="toc-text">结语</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9C%AC%E6%96%87%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 本文总结：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%90%8E%E6%9C%9F%E4%BC%98%E5%8C%96%EF%BC%9A"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. 后期优化：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/11/14/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" title="你分库分表的姿势对么？——详谈水平分库分表">你分库分表的姿势对么？——详谈水平分库分表</a><time datetime="2021-11-14T08:45:31.440Z" title="Created 2021-11-14 16:45:31">2021-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/11/14/Java%20%E8%BF%9B%E9%98%B6%E8%B7%AF%E7%BA%BF%E5%9B%BE/" title="Java进阶路线图">Java进阶路线图</a><time datetime="2021-11-14T06:58:00.986Z" title="Created 2021-11-14 14:58:00">2021-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/02/17/%5B%E8%BD%AC%E8%BD%BD%5D%E8%8A%8B%E9%81%93%20Soul%20%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8%EF%BC%88%E5%9B%BD%E4%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3%EF%BC%89/" title="Soul 极简入门（国产微服务网关）">Soul 极简入门（国产微服务网关）</a><time datetime="2021-02-17T08:33:16.109Z" title="Created 2021-02-17 16:33:16">2021-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2020/09/30/Spring5.3%20%E6%BA%90%E7%A0%81%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="Spring5.3 源码环境搭建">Spring5.3 源码环境搭建</a><time datetime="2020-09-30T13:28:47.425Z" title="Created 2020-09-30 21:28:47">2020-09-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2020/01/01/Spring-Cloud-Alibaba%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89Nacos%E5%88%9D%E8%AF%86/" title="Spring Cloud Alibaba系列教程（一）Nacos初识">Spring Cloud Alibaba系列教程（一）Nacos初识</a><time datetime="2020-01-01T15:17:33.000Z" title="Created 2020-01-01 23:17:33">2020-01-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By will-we</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

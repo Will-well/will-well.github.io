@@ -1,0 +1,360 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>你分库分表的姿势对么？——详谈水平分库分表 | will-well</title><meta name="author" content="will-we"><meta name="copyright" content="will-we"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="你分库分表的姿势对么？——详谈水平分库分表 精心帮你快速阅读脑图：  转载文章：你分库分表的姿势对么？——详谈水平分库分表  一、背景提起分库分表，对于大部分服务器开发来说，其实并不是一个新鲜的名词。随着业务的发展，我们表中的数据量会变的越来越大，字段也可能随着业务复杂度的升高而逐渐增多，我们为了解决单表的查询性能问题，一般会进行分表操作。 同时我们业务的用户活跃度也会越来越高，并发量级不断加大，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你分库分表的姿势对么？——详谈水平分库分表">
+<meta property="og:url" content="http://will-we.gitee.io/2021/11/14/[%E8%BD%AC%E8%BD%BD]%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/index.html">
+<meta property="og:site_name" content="will-well">
+<meta property="og:description" content="你分库分表的姿势对么？——详谈水平分库分表 精心帮你快速阅读脑图：  转载文章：你分库分表的姿势对么？——详谈水平分库分表  一、背景提起分库分表，对于大部分服务器开发来说，其实并不是一个新鲜的名词。随着业务的发展，我们表中的数据量会变的越来越大，字段也可能随着业务复杂度的升高而逐渐增多，我们为了解决单表的查询性能问题，一般会进行分表操作。 同时我们业务的用户活跃度也会越来越高，并发量级不断加大，">
+<meta property="og:locale">
+<meta property="og:image" content="http://will-we.gitee.io/uploads/avatar.png">
+<meta property="article:published_time" content="2021-11-14T08:45:31.440Z">
+<meta property="article:modified_time" content="2023-09-02T11:24:19.777Z">
+<meta property="article:author" content="will-we">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://will-we.gitee.io/uploads/avatar.png"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://will-we.gitee.io/2021/11/14/[%E8%BD%AC%E8%BD%BD]%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '你分库分表的姿势对么？——详谈水平分库分表',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-02 19:24:19'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/uploads/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="will-well"><span class="site-name">will-well</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">你分库分表的姿势对么？——详谈水平分库分表</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-11-14T08:45:31.440Z" title="Created 2021-11-14 16:45:31">2021-11-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-09-02T11:24:19.777Z" title="Updated 2023-09-02 19:24:19">2023-09-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="你分库分表的姿势对么？——详谈水平分库分表"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><h1 id="你分库分表的姿势对么？——详谈水平分库分表"><a href="#你分库分表的姿势对么？——详谈水平分库分表" class="headerlink" title="你分库分表的姿势对么？——详谈水平分库分表"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/vivotech/p/15457635.html">你分库分表的姿势对么？——详谈水平分库分表</a></h1><blockquote>
+<p>精心帮你快速阅读脑图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/image-20211030235346839.png" alt="快速阅读"></p>
+<p>转载文章：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/vivotech/p/15457635.html">你分库分表的姿势对么？——详谈水平分库分表</a></p>
+</blockquote>
+<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>提起分库分表，对于大部分服务器开发来说，其实并不是一个新鲜的名词。随着业务的发展，我们表中的数据量会变的越来越大，字段也可能随着业务复杂度的升高而逐渐增多，我们为了解决单表的查询性能问题，一般会进行分表操作。</p>
+<p>同时我们业务的用户活跃度也会越来越高，并发量级不断加大，那么可能会达到单个数据库的处理能力上限。此时我们为了解决数据库的处理性能瓶颈，一般会进行分库操作。不管是分库操作还是分表操作，我们一般都有两种方式应对，一种是垂直拆分，一种是水平拆分。</p>
+<p>关于两种拆分方式的区别和特点，互联网上参考资料众多，很多人都写过相关内容，这里就不再进行详细赘述，有兴趣的读者可以自行检索。</p>
+<p>此文主要详细聊一聊，我们最实用最常见的水平分库分表方式中的一些特殊细节，希望能帮助大家避免走弯路，找到最合适自身业务的分库分表设计。</p>
+<blockquote>
+<p>【注1】本文中的案例均基于Mysql数据库，下文中的分库分表统指水平分库分表。</p>
+<p>【注2】后文中提到到M库N表，均指共M个数据库，每个数据库共N个分表，即总表个数其实为M*N。</p>
+</blockquote>
+<h1 id="二、什么是一个好的分库分表方案？"><a href="#二、什么是一个好的分库分表方案？" class="headerlink" title="二、什么是一个好的分库分表方案？"></a>二、什么是一个好的分库分表方案？</h1><h2 id="2-1-方案可持续性"><a href="#2-1-方案可持续性" class="headerlink" title="2.1 方案可持续性"></a>2.1 方案可持续性</h2><p>前期业务数据量级不大，流量较低的时候，我们无需分库分表，也不建议分库分表。但是一旦我们要对业务进行分库分表设计时，就一定要考虑到分库分表方案的可持续性。</p>
+<p><strong>那何为可持续性？</strong>其实就是：业务数据量级和业务流量未来进一步升高达到新的量级的时候，我们的分库分表方案可以持续使用。</p>
+<p>一个通俗的案例，假定当前我们分库分表的方案为10库100表，那么未来某个时间点，若10个库仍然无法应对用户的流量压力，或者10个库的磁盘使用即将达到物理上限时，我们的方案能够进行平滑扩容。</p>
+<p>在后文中我们将介绍下目前业界常用的翻倍扩容法和一致性Hash扩容法。</p>
+<h2 id="2-2-数据偏斜问题"><a href="#2-2-数据偏斜问题" class="headerlink" title="2.2 数据偏斜问题"></a>2.2 数据偏斜问题</h2><p>一个良好的分库分表方案，它的数据应该是需要比较均匀的分散在各个库表中的。如果我们进行一个拍脑袋式的分库分表设计，很容易会遇到以下类似问题：</p>
+<blockquote>
+<p>a、某个数据库实例中，部分表的数据很多，而其他表中的数据却寥寥无几，业务上的表现经常是延迟忽高忽低，飘忽不定。</p>
+<p>b、数据库集群中，部分集群的磁盘使用增长特别块，而部分集群的磁盘增长却很缓慢。每个库的增长步调不一致，这种情况会给后续的扩容带来步调不一致，无法统一操作的问题。</p>
+</blockquote>
+<p>这边我们定义分库分表最大数据偏斜率为 ：（数据量最大样本 - 数据量最小样本）&#x2F; 数据量最小样本。一般来说，如果我们的最大数据偏斜率在5%以内是可以接受的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/80c1a54d3e124557c5c5c58e09617ecb.png" alt="img"></p>
+<h1 id="三、常见的分库分表方案"><a href="#三、常见的分库分表方案" class="headerlink" title="三、常见的分库分表方案"></a>三、常见的分库分表方案</h1><h2 id="3-1-Range分库分表"><a href="#3-1-Range分库分表" class="headerlink" title="3.1 Range分库分表"></a>3.1 Range分库分表</h2><p>顾名思义，该方案根据数据范围划分数据的存放位置。</p>
+<p>举个最简单例子，我们可以把订单表按照年份为单位，每年的数据存放在单独的库（或者表）中。如下图所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 通过年份分表</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> orderId</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">rangeShardByYear</span><span class="params">(String orderId)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">year</span> <span class="operator">=</span> Integer.parseInt(orderId.substring(<span class="number">0</span>, <span class="number">4</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;t_order_&quot;</span> + year;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过数据的范围进行分库分表，该方案是最朴实的一种分库方案，它也可以和其他分库分表方案灵活结合使用。时下非常流行的分布式数据库：TiDB数据库，针对TiKV中数据的打散，也是基于Range的方式进行，将不同范围内的[StartKey,EndKey)分配到不同的Region上。</p>
+<p>下面我们看看该方案的缺点：</p>
+<ul>
+<li>a、最明显的就是数据热点问题，例如上面案例中的订单表，很明显当前年度所在的库表属于热点数据，需要承载大部分的IO和计算资源。</li>
+<li>b、新库和新表的追加问题。一般我们线上运行的应用程序是没有数据库的建库建表权限的，故我们需要提前将新的库表提前建立，防止线上故障。</li>
+</ul>
+<blockquote>
+<p>这点非常容易被遗忘，尤其是稳定跑了几年没有迭代任务，或者人员又交替频繁的模块。</p>
+</blockquote>
+<ul>
+<li>c、业务上的交叉范围内数据的处理。举个例子，订单模块无法避免一些中间状态的数据补偿逻辑，即需要通过定时任务到订单表中扫描那些长时间处于待支付确认等状态的订单。</li>
+</ul>
+<p>这里就需要注意了，因为是通过年份进行分库分表，那么元旦的那一天，你的定时任务很有可能会漏掉上一年的最后一天的数据扫描。</p>
+<h2 id="3-2-Hash分库分表"><a href="#3-2-Hash分库分表" class="headerlink" title="3.2 Hash分库分表"></a>3.2 Hash分库分表</h2><p>虽然分库分表的方案众多，但是Hash分库分表是最大众最普遍的方案，也是本文花最大篇幅描述的部分。</p>
+<p>针对Hash分库分表的细节部分，相关的资料并不多。大部分都是阐述一下概念举几个示例，而细节部分并没有特别多的深入，如果未结合自身业务贸然参考引用，后期非常容易出现各种问题。</p>
+<p>在正式介绍这种分库分表方式之前，我们先看几个常见的错误案例。</p>
+<p><strong>常见错误案例一：非互质关系导致的数据偏斜问题</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ShardCfg <span class="title function_">shard</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">hash</span> <span class="operator">=</span> userId.hashCode();</span><br><span class="line">    <span class="comment">// 对库数量取余结果为库序号</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">dbIdx</span> <span class="operator">=</span> Math.abs(hash % DB_CNT);</span><br><span class="line">    <span class="comment">// 对表数量取余结果为表序号</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">tblIdx</span> <span class="operator">=</span> Math.abs(hash % TBL_CNT);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ShardCfg</span>(dbIdx, tblIdx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述方案是初次使用者特别容易进入的误区，用Hash值分别对分库数和分表数取余，得到库序号和表序号。其实稍微思索一下，我们就会发现，以10库100表为例，如果一个Hash值对100取余为0，那么它对10取余也必然为0。</p>
+<p>这就意味着只有0库里面的0表才可能有数据，而其他库中的0表永远为空！</p>
+<p>类似的我们还能推导到，0库里面的共100张表，只有10张表中(个位数为0的表序号)才可能有数据。这就带来了非常严重的数据偏斜问题，因为某些表中永远不可能有数据，最大数据偏斜率达到了无穷大。</p>
+<p>那么很明显，该方案是一个未达到预期效果的错误方案。数据的散落情况大致示意图如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/5c86c49a97e97385225f70e7d8a278c0.png" alt="img"></p>
+<p>事实上，只要库数量和表数量非互质关系，都会出现某些表中无数据的问题。</p>
+<p>证明如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/6167d188a92b2dcd1639356695718406.png" alt="img"></p>
+<p><strong>那么是不是只要库数量和表数量互质就可用用这种分库分表方案呢？比如我用11库100表的方案，是不是就合理了呢？</strong></p>
+<p>答案是否定的，我们除了要考虑数据偏斜的问题，还需要考虑可持续性扩容的问题，一般这种Hash分库分表的方案后期的扩容方式都是通过翻倍扩容法，那11库翻倍后，和100又不再互质。</p>
+<p>当然，如果分库数和分表数不仅互质，而且分表数为奇数(例如10库101表)，则理论上可以使用该方案，但是我想大部分人可能都会觉得使用奇数的分表数比较奇怪吧。</p>
+<p><strong>常见错误案例二：扩容难以持续</strong></p>
+<p>如果避开了上述案例一的陷阱，那么我们又很容易一头扎进另一个陷阱，大概思路如下；</p>
+<p>我们把10库100表看成总共1000个逻辑表，将求得的Hash值对1000取余，得到一个介于[0，999)中的数，然后再将这个数二次均分到每个库和每个表中，大概逻辑代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ShardCfg <span class="title function_">shard</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">        <span class="comment">// ① 算Hash</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">hash</span> <span class="operator">=</span> userId.hashCode();</span><br><span class="line">        <span class="comment">// ② 总分片数</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">sumSlot</span> <span class="operator">=</span> DB_CNT * TBL_CNT;</span><br><span class="line">        <span class="comment">// ③ 分片序号</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">slot</span> <span class="operator">=</span> Math.abs(hash % sumSlot);</span><br><span class="line">        <span class="comment">// ④ 计算库序号和表序号的错误案例</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">dbIdx</span> <span class="operator">=</span> slot % DB_CNT ;</span><br><span class="line">        <span class="type">int</span> <span class="variable">tblIdx</span> <span class="operator">=</span> slot / DB_CNT ;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ShardCfg</span>(dbIdx, tblIdx);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>该方案确实很巧妙的解决了数据偏斜的问题，只要Hash值足够均匀，那么理论上分配序号也会足够平均，于是每个库和表中的数据量也能保持较均衡的状态。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/9363643792f0128655fc2074e43e571f.png" alt="img"></p>
+<p>但是该方案有个比较大的问题，那就是在计算表序号的时候，依赖了总库的数量，那么后续翻倍扩容法进行扩容时，会出现扩容前后数据不在同一个表中，从而无法实施。</p>
+<p>如上图中，例如扩容前Hash为1986的数据应该存放在6库98表，但是翻倍扩容成20库100表后，它分配到了6库99表，表序号发生了偏移。这样的话，我们在后续在扩容的时候，不仅要基于库迁移数据，还要基于表迁移数据，非常麻烦且易错。</p>
+<p>看完了上面的几种典型的错误案例，那么我们有哪些比较正确的方案呢？下面将结合一些实际场景案例介绍几种Hash分库分表的方案。</p>
+<p><strong>常用姿势一：标准的二次分片法</strong></p>
+<p>上述错误案例二中，整体思路完全正确，只是最后计算库序号和表序号的时候，使用了库数量作为影响表序号的因子，导致扩容时表序号偏移而无法进行。</p>
+<p>事实上，我们只需要换种写法，就能得出一个比较大众化的分库分表方案。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ShardCfg <span class="title function_">shard2</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">        <span class="comment">// ① 算Hash</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">hash</span> <span class="operator">=</span> userId.hashCode();</span><br><span class="line">        <span class="comment">// ② 总分片数</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">sumSlot</span> <span class="operator">=</span> DB_CNT * TBL_CNT;</span><br><span class="line">        <span class="comment">// ③ 分片序号</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">slot</span> <span class="operator">=</span> Math.abs(hash % sumSlot);</span><br><span class="line">        <span class="comment">// ④ 重新修改二次求值方案</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">dbIdx</span> <span class="operator">=</span> slot / TBL_CNT ;</span><br><span class="line">        <span class="type">int</span> <span class="variable">tblIdx</span> <span class="operator">=</span> slot % TBL_CNT ;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ShardCfg</span>(dbIdx, tblIdx);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>大家可以注意到，和错误案例二中的区别就是通过分配序号重新计算库序号和表序号的逻辑发生了变化。它的分配情况如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/4c0976e6bb893cfe66adf1d402f6949c.png" alt="img"></p>
+<p>那为何使用这种方案就能够有很好的扩展持久性呢？我们进行一个简短的证明：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/f10a29c92f8495a9bbd5eb3491af8363.png" alt="img"></p>
+<p>通过上面结论我们知道，通过翻倍扩容后，我们的表序号一定维持不变，库序号可能还是在原来库，也可能平移到了新库中(原库序号加上原分库数)，完全符合我们需要的扩容持久性方案。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/99127fd6ffecbdbd19d9d1edc0c747ef.png" alt="img"></p>
+<p><strong>【方案缺点】</strong></p>
+<p>1、翻倍扩容法前期操作性高，但是后续如果分库数已经是大几十的时候，每次扩容都非常耗费资源。</p>
+<p>2、连续的分片键Hash值大概率会散落在相同的库中，某些业务可能容易存在库热点（例如新生成的用户Hash相邻且递增，且新增用户又是高概率的活跃用户，那么一段时间内生成的新用户都会集中在相邻的几个库中）。</p>
+<p><strong>常用姿势二：关系表冗余</strong></p>
+<p>我们可以将分片键对应库的关系通过关系表记录下来，我们把这张关系表称为”路由关系表”。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ShardCfg <span class="title function_">shard</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">tblIdx</span> <span class="operator">=</span> Math.abs(userId.hashCode() % TBL_CNT);</span><br><span class="line">        <span class="comment">// 从缓存获取</span></span><br><span class="line">        <span class="type">Integer</span> <span class="variable">dbIdx</span> <span class="operator">=</span> loadFromCache(userId);</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == dbIdx) &#123;</span><br><span class="line">            <span class="comment">// 从路由表获取</span></span><br><span class="line">            dbIdx = loadFromRouteTable(userId);</span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">null</span> != dbIdx) &#123;</span><br><span class="line">                <span class="comment">// 保存到缓存</span></span><br><span class="line">                saveRouteCache(userId, dbIdx);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == dbIdx) &#123;</span><br><span class="line">            <span class="comment">// 此处可以自由实现计算库的逻辑</span></span><br><span class="line">            dbIdx = selectRandomDbIdx();</span><br><span class="line">            saveToRouteTable(userId, dbIdx);</span><br><span class="line">            saveRouteCache(userId, dbIdx);</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ShardCfg</span>(dbIdx, tblIdx);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>该方案还是通过常规的Hash算法计算表序号，而计算库序号时，则从路由表读取数据。因为在每次数据查询时，都需要读取路由表，故我们需要将分片键和库序号的对应关系记录同时维护在缓存中以提升性能。</p>
+<p>上述实例中<strong>selectRandomDbIdx</strong>方法作用为生成该分片键对应的存储库序号，这边可以非常灵活的动态配置。例如可以为每个库指定一个权重，权重大的被选中的概率更高，权重配置成0则可以将关闭某些库的分配。当发现数据存在偏斜时，也可以调整权重使得各个库的使用量调整趋向接近。</p>
+<p>该方案还有个优点，就是理论上后续进行扩容的时候，仅需要挂载上新的数据库节点，将权重配置成较大值即可，无需进行任何的数据迁移即可完成。</p>
+<p>如下图所示：最开始我们为4个数据库分配了相同的权重，理论上落在每个库的数据概率均等。但是由于用户也有高频低频之分，可能某些库的数据增长会比较快。当挂载新的数据库节点后，我们灵活的调整了每个库的新权重。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/e98b16f1cd238dd58241076f4baab049.gif" alt="img"></p>
+<p>该方案似乎解决了很多问题，那么它有没有什么不适合的场景呢？当然有，该方案在很多场景下其实并不太适合，以下举例说明。</p>
+<p>a、每次读取数据需要访问路由表，虽然使用了缓存，但是还是有一定的性能损耗。</p>
+<p>b、路由关系表的存储方面，有些场景并不合适。例如上述案例中用户id的规模大概是在10亿以内，我们用单库百表存储该关系表即可。但如果例如要用文件MD5摘要值作为分片键，因为样本集过大，无法为每个md5值都去指定关系（当然我们也可以使用md5前N位来存储关系）。</p>
+<p><strong>c、饥饿占位问题，如下详叙</strong>：</p>
+<p>我们知道，该方案的特点是后续无需扩容，可以随时修改权重调整每个库的存储增长速度。但是这个愿景是比较缥缈，并且很难实施的，我们选取一个简单的业务场景考虑以下几个问题。</p>
+<p><strong>【业务场景】</strong>：以用户存放文件到云端的云盘业务为例，需要对用户的文件信息进行分库分表设计，有以下假定场景：</p>
+<ul>
+<li>①假定有2亿理论用户，假设当前有3000W有效用户。</li>
+<li>②平均每个用户文件量级在2000个以内</li>
+<li>③用户id为随机16位字符串</li>
+<li>④初期为10库，每个库100张表。</li>
+</ul>
+<p>我们使用路由表记录每个用户所在的库序号信息。那么该方案会有以下问题：</p>
+<p><strong>第一</strong>：我们总共有2亿个用户，只有3000W个产生过事务的用户。若程序不加处理，用户发起任何请求则创建路由表数据，会导致为大量实际没有事务数据的用户提前创建路由表。</p>
+<p>笔者最初存储云盘用户数据的时候便遇到了这个问题，客户端app会在首页查询用户空间使用情况，这样导致几乎一开始就为每个使用者分配好了路由。随着时间的推移，这部分没有数据的”静默”的用户，随时可能开始他的云盘使用之旅而“复苏”，从而导致它所在的库迅速增长并超过单个库的空间容量极限，从而被迫拆分扩容。</p>
+<p>解决这个问题的方案，其实就是只针对事务操作(例如购买空间，上传数据，创建文件夹等等)才进行路由的分配，这样对代码层面便有了一些倾入。</p>
+<p><strong>第二</strong>、按照前面描述的业务场景，一个用户最终平均有2000条数据，假定每行大小为1K，为了保证B+数的层级在3层，我们限制每张表的数据量在2000W，分表数为100的话，可以得到理论上每个库的用户数不能超过100W个用户。</p>
+<p>也就是如果是3000W个产生过事务的用户，我们需要为其分配30个库，这样会在业务前期，用户平均数据量相对较少的时候，存在非常大的数据库资源的浪费。</p>
+<p>解决第二个问题，我们一般可以将很多数据库放在一个实例上，后续随着增长情况进行拆分。也可以后续针对将满的库，使用常规手段进行拆分和迁移。</p>
+<p><strong>常用姿势三：基因法</strong></p>
+<p>还是由错误案例一启发，我们发现案例一不合理的主要原因，就是因为库序号和表序号的计算逻辑中，有公约数这个因子在影响库表的独立性。</p>
+<p>那么我们是否可以换一种思路呢？我们使用相对独立的Hash值来计算库序号和表序号。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ShardCfg <span class="title function_">shard</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">dbIdx</span> <span class="operator">=</span> Math.abs(userId.substring(<span class="number">0</span>, <span class="number">4</span>).hashCode() % DB_CNT );</span><br><span class="line">    <span class="type">int</span> <span class="variable">tblIdx</span> <span class="operator">=</span> Math.abs(userId.hashCode() % TBL_CNT);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ShardCfg</span>(dbIdx, tblIdx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，我们计算库序号的时候做了部分改动，我们使用分片键的前四位作为Hash值来计算库序号。</p>
+<p>这也是一种常用的方案，我们称为基因法，即使用原分片键中的某些基因（例如前四位）作为库的计算因子，而使用另外一些基因作为表的计算因子。该方案也是网上不少的实践方案或者是其变种，看起来非常巧妙的解决了问题，然而在实际生成过程中还是需要慎重。</p>
+<p>笔者曾在云盘的空间模块的分库分表实践中采用了该方案，使用16库100表拆分数据，上线初期数据正常。然而当数据量级增长起来后，发现每个库的用户数量严重不均等，故猜测该方案存在一定的数据偏斜。</p>
+<p>为了验证观点，进行如下测试，随机2亿个用户id（16位的随机字符串），针对不同的M库N表方案，重复若干次后求平均值得到结论如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">8</span>库<span class="number">100</span>表</span><br><span class="line">min=<span class="number">248305</span>(dbIdx=<span class="number">2</span>, tblIdx=<span class="number">64</span>), max=<span class="number">251419</span>(dbIdx=<span class="number">7</span>, tblIdx=<span class="number">8</span>), rate= <span class="number">1.25</span>%            √</span><br><span class="line"><span class="number">16</span>库<span class="number">100</span>表</span><br><span class="line">min=<span class="number">95560</span>(dbIdx=<span class="number">8</span>, tblIdx=<span class="number">42</span>), max=<span class="number">154476</span>(dbIdx=<span class="number">0</span>, tblIdx=<span class="number">87</span>), rate= <span class="number">61.65</span>%           ×</span><br><span class="line"><span class="number">20</span>库<span class="number">100</span>表</span><br><span class="line">min=<span class="number">98351</span>(dbIdx=<span class="number">14</span>, tblIdx=<span class="number">78</span>), max=<span class="number">101228</span>(dbIdx=<span class="number">6</span>, tblIdx=<span class="number">71</span>), rate= <span class="number">2.93</span>%</span><br></pre></td></tr></table></figure>
+
+<p>我们发现该方案中，分库数为16，分表数为100，数量最小行数仅为10W不到，但是最多的已经达到了15W+，最大数据偏斜率高达61%。按这个趋势发展下去，后期很可能出现一台数据库容量已经使用满，而另一台还剩下30%+的容量。</p>
+<p>该方案并不是一定不行，而是我们在采用的时候，要综合分片键的样本规则，选取的分片键前缀位数，库数量，表数量，四个变量对最终的偏斜率都有影响。</p>
+<p>例如上述例子中，如果不是16库100表，而是8库100表，或者20库100表，数据偏斜率都能降低到了5%以下的可接受范围。所以该方案的隐藏的”坑”较多，我们不仅要估算上线初期的偏斜率，还需要测算若干次翻倍扩容后的数据偏斜率。</p>
+<p>例如你用着初期比较完美的8库100表的方案，后期扩容成16库100表的时候，麻烦就接踵而至。</p>
+<p><strong>常用姿势四：剔除公因数法</strong></p>
+<p>还是基于错误案例一启发，在很多场景下我们还是希望相邻的Hash能分到不同的库中。就像N库单表的时候，我们计算库序号一般直接用Hash值对库数量取余。</p>
+<p>那么我们是不是可以有办法去除掉公因数的影响呢？下面为一个可以考虑的实现案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ShardCfg <span class="title function_">shard</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">dbIdx</span> <span class="operator">=</span> Math.abs(userId.hashCode() % DB_CNT);</span><br><span class="line">        <span class="comment">// 计算表序号时先剔除掉公约数的影响</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">tblIdx</span> <span class="operator">=</span> Math.abs((userId.hashCode() / TBL_CNT) % TBL_CNT);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ShardCfg</span>(dbIdx, tblIdx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过测算，该方案的最大数据偏斜度也比较小，针对不少业务从N库1表升级到N库M表下，需要维护库序号不变的场景下可以考虑。</p>
+<p><strong>常用姿势五：一致性Hash法</strong></p>
+<p>一致性Hash算法也是一种比较流行的集群数据分区算法，比如RedisCluster即是通过一致性Hash算法，使用16384个虚拟槽节点进行每个分片数据的管理。关于一致性Hash的具体原理这边不再重复描述，读者可以自行翻阅资料。</p>
+<p>这边详细介绍如何使用一致性Hash进行分库分表的设计。</p>
+<p>我们通常会将每个实际节点的配置持久化在一个配置项或者是数据库中，应用启动时或者是进行切换操作的时候会去加载配置。配置一般包括一个[StartKey,Endkey)的左闭右开区间和一个数据库节点信息，例如：</p>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> TreeMap&lt;Long, Integer&gt; nodeTreeMap = <span class="keyword">new</span> <span class="title class_">TreeMap</span>&lt;&gt;();</span><br><span class="line"> </span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 启动时加载分区配置</span></span><br><span class="line">    List&lt;HashCfg&gt; cfgList = fetchCfgFromDb();</span><br><span class="line">    <span class="keyword">for</span> (HashCfg cfg : cfgList) &#123;</span><br><span class="line">        nodeTreeMap.put(cfg.endKey, cfg.nodeIdx);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> ShardCfg <span class="title function_">shard</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">hash</span> <span class="operator">=</span> userId.hashCode();</span><br><span class="line">    <span class="type">int</span> <span class="variable">dbIdx</span> <span class="operator">=</span> nodeTreeMap.tailMap((<span class="type">long</span>) hash, <span class="literal">false</span>).firstEntry().getValue();</span><br><span class="line">    <span class="type">int</span> <span class="variable">tblIdx</span> <span class="operator">=</span> Math.abs(hash % <span class="number">100</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ShardCfg</span>(dbIdx, tblIdx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，这种形式和上文描述的Range分表非常相似，Range分库分表方式针对分片键本身划分范围，而一致性Hash是针对分片键的Hash值进行范围配置。</p>
+<p>正规的一致性Hash算法会引入虚拟节点，每个虚拟节点会指向一个真实的物理节点。这样设计方案主要是能够在加入新节点后的时候，可以有方案保证每个节点迁移的数据量级和迁移后每个节点的压力保持几乎均等。</p>
+<p>但是用在分库分表上，一般大部分都只用实际节点，引入虚拟节点的案例不多，主要有以下原因：</p>
+<blockquote>
+<p>a、应用程序需要花费额外的耗时和内存来加载虚拟节点的配置信息。如果虚拟节点较多，内存的占用也会有些不太乐观。</p>
+<p>b、由于mysql有非常完善的主从复制方案，与其通过从各个虚拟节点中筛选需要迁移的范围数据进行迁移，不如通过从库升级方式处理后再删除冗余数据简单可控。</p>
+<p>c、虚拟节点主要解决的痛点是节点数据搬迁过程中各个节点的负载不均衡问题，通过虚拟节点打散到各个节点中均摊压力进行处理。</p>
+</blockquote>
+<p>而作为OLTP数据库，我们很少需要突然将某个数据库下线，新增节点后一般也不会从0开始从其他节点搬迁数据，而是前置准备好大部分数据的方式，故一般来说没有必要引入虚拟节点来增加复杂度。</p>
+<h1 id="四、常见扩容方案"><a href="#四、常见扩容方案" class="headerlink" title="四、常见扩容方案"></a>四、常见扩容方案</h1><h2 id="4-1-翻倍扩容法"><a href="#4-1-翻倍扩容法" class="headerlink" title="4.1 翻倍扩容法"></a>4.1 翻倍扩容法</h2><p>翻倍扩容法的主要思维是每次扩容，库的数量均翻倍处理，而翻倍的数据源通常是由原数据源通过主从复制方式得到的从库升级成主库提供服务的方式。故有些文档将其称作”<strong>从库升级法</strong>“。</p>
+<p>理论上，经过翻倍扩容法后，我们会多一倍的数据库用来存储数据和应对流量，原先数据库的磁盘使用量也将得到一半空间的释放。如下图所示:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/46e34d0f4d1fe3e7acc16bd28fe08aa9.png" alt="img"></p>
+<p>具体的流程大致如下：</p>
+<p>①、时间点t1：为每个节点都新增从库，开启主从同步进行数据同步。</p>
+<p>②、时间点t2：主从同步完成后，对主库进行禁写。</p>
+<blockquote>
+<p>此处禁写主要是为了保证数据的正确性。若不进行禁写操作，在以下两个时间窗口期内将出现数据不一致的问题：</p>
+<p>a、断开主从后，若主库不禁写，主库若还有数据写入，这部分数据将无法同步到从库中。</p>
+<p>b、应用集群识别到分库数翻倍的时间点无法严格一致，在某个时间点可能两台应用使用不同的分库数，运算到不同的库序号，导致错误写入。</p>
+</blockquote>
+<p>③、时间点t3：同步完全完成后，断开主从关系，理论上此时从库和主库有着完全一样的数据集。</p>
+<p>④、时间点t4：从库升级为集群节点，业务应用识别到新的分库数后，将应用新的路由算法。</p>
+<blockquote>
+<p>一般情况下，我们将分库数的配置放到配置中心中，当上述三个步骤完成后，我们修改分库数进行翻倍，应用生效后，应用服务将使用新的配置。这里需要注意的是，业务应用接收到新的配置的时间点不一定一致，所以必定存在一个时间窗口期，该期间部分机器使用原分库数，部分节点使用新分库数。这也正是我们的禁写操作一定要在此步完成后才能放开的原因。</p>
+</blockquote>
+<p>⑤、时间点t5：确定所有的应用均接受到库总数的配置后，放开原主库的禁写操作，此时应用完全恢复服务。</p>
+<p>⑥、启动离线的定时任务，清除各库中的约一半冗余数据。</p>
+<blockquote>
+<p>为了节省磁盘的使用率，我们可以选择离线定时任务清除冗余的数据。也可以在业务初期表结构设计的时候，将索引键的Hash值存为一个字段。那么以上述常用姿势四为例，我们离线的清除任务可以简单的通过sql即可实现（需要防止锁住全表，可以拆分成若干个id范围的子sql执行）：</p>
+<p>delete from db0.tbl0 where hash_val mod 4 &lt;&gt; 0;</p>
+<p>delete from db1.tbl0 where hash_val mod 4 &lt;&gt; 1;</p>
+<p>delete from db2.tbl0 where hash_val mod 4 &lt;&gt; 2;</p>
+<p>delete from db3.tbl0 where hash_val mod 4 &lt;&gt; 3;</p>
+</blockquote>
+<p>具体的扩容步骤可参考下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/4de475a8f3c98d7125432cc173decdf3.gif" alt="img"></p>
+<p><strong>总结</strong>：通过上述迁移方案可以看出，从时间点t2到t5时间窗口呢内，需要对数据库禁写，相当于是该时间范围内服务器是部分有损的，该阶段整体耗时差不多是在分钟级范围内。若业务可以接受，可以在业务低峰期进行该操作。</p>
+<p>当然也会有不少应用无法容忍分钟级写入不可用，例如写操作远远大于读操作的应用，此时可以结合canel开源框架进行窗口期内数据双写操作以保证数据的一致性。</p>
+<p>该方案主要借助于mysql强大完善的主从同步机制，能在事前提前准备好新的节点中大部分需要的数据，节省大量的人为数据迁移操作。</p>
+<p>但是缺点也很明显，一是过程中整个服务可能需要以有损为代价，二是每次扩容均需要对库数量进行翻倍，会提前浪费不少的数据库资源。</p>
+<h2 id="4-2-一致性Hash扩容"><a href="#4-2-一致性Hash扩容" class="headerlink" title="4.2 一致性Hash扩容"></a>4.2 一致性Hash扩容</h2><p>我们主要还是看下不带虚拟槽的一致性Hash扩容方法，假如当前数据库节点DB0负载或磁盘使用过大需要扩容，我们通过扩容可以达到例如下图的效果。</p>
+<p>下图中，扩容前配置了三个Hash分段，发现[-Inf，-10000）范围内的的数据量过大或者压力过高时，需要对其进行扩容。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/will-well/pictures/history/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.md/b25a4b5c51d41f6eadcf9cc1c73f5238.png" alt="img"></p>
+<p>主要步骤如下：</p>
+<p>①、<strong>时间点t1</strong>：针对需要扩容的数据库节点增加从节点，开启主从同步进行数据同步。</p>
+<p>②、<strong>时间点t2</strong>：完成主从同步后，对原主库进行禁写。</p>
+<blockquote>
+<p>此处原因和翻倍扩容法类似，需要保证新的从库和原来主库中数据的一致性。</p>
+</blockquote>
+<p>③、<strong>时间点t3</strong>：同步完全完成后，断开主从关系，理论上此时从库和主库有着完全一样的数据集。</p>
+<p>④、<strong>时间点t4</strong>：修改一致性Hash范围的配置，并使应用服务重新读取并生效。</p>
+<p>⑤、<strong>时间点t5</strong>：确定所有的应用均接受到新的一致性Hash范围配置后，放开原主库的禁写操作，此时应用完全恢复服务。</p>
+<p>⑥、<strong>启动离线的定时任务</strong>，清除冗余数据。</p>
+<p>可以看到，该方案和翻倍扩容法的方案比较类似，但是它更加灵活，可以根据当前集群每个节点的压力情况选择性扩容，而无需整个集群同时翻倍进行扩容。</p>
+<h1 id="五、小结"><a href="#五、小结" class="headerlink" title="五、小结"></a>五、小结</h1><p>本文主要描述了我们进行水平分库分表设计时的一些常见方案。</p>
+<p>我们在进行分库分表设计时，可以选择例如范围分表，Hash分表，路由表，或者一致性Hash分表等各种方案。进行选择时需要充分考虑到后续的扩容可持续性，最大数据偏斜率等因素。</p>
+<p>文中也列举了一些常见的错误示例，例如库表计算逻辑中公约数的影响，使用前若干位计算库序号常见的数据倾斜因素等等。</p>
+<p>我们在实际进行选择时，一定要考虑自身的业务特点，充分验证分片键在各个参数因子下的数据偏斜程度，并提前规划考虑好后续扩容的方案。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://will-we.gitee.io">will-we</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://will-we.gitee.io/2021/11/14/[%E8%BD%AC%E8%BD%BD]%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">http://will-we.gitee.io/2021/11/14/[%E8%BD%AC%E8%BD%BD]%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/uploads/avatar.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/11/14/Java%20%E8%BF%9B%E9%98%B6%E8%B7%AF%E7%BA%BF%E5%9B%BE/" title="Java进阶路线图"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Java进阶路线图</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/uploads/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">will-we</div><div class="author-info__description">吾心安处 即是吾乡；欢迎来到我的小窝，这是一个有趣的地方</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8"><span class="toc-number">1.</span> <span class="toc-text">你分库分表的姿势对么？——详谈水平分库分表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">一、背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%9A%84%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E6%96%B9%E6%A1%88%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">二、什么是一个好的分库分表方案？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E6%96%B9%E6%A1%88%E5%8F%AF%E6%8C%81%E7%BB%AD%E6%80%A7"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 方案可持续性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E6%95%B0%E6%8D%AE%E5%81%8F%E6%96%9C%E9%97%AE%E9%A2%98"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 数据偏斜问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E6%96%B9%E6%A1%88"><span class="toc-number">4.</span> <span class="toc-text">三、常见的分库分表方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Range%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 Range分库分表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-Hash%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 Hash分库分表</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%B8%B8%E8%A7%81%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88"><span class="toc-number">5.</span> <span class="toc-text">四、常见扩容方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E7%BF%BB%E5%80%8D%E6%89%A9%E5%AE%B9%E6%B3%95"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 翻倍扩容法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E4%B8%80%E8%87%B4%E6%80%A7Hash%E6%89%A9%E5%AE%B9"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 一致性Hash扩容</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%B0%8F%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">五、小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/11/14/%5B%E8%BD%AC%E8%BD%BD%5D%E4%BD%A0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9A%84%E5%A7%BF%E5%8A%BF%E5%AF%B9%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%E8%AF%A6%E8%B0%88%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" title="你分库分表的姿势对么？——详谈水平分库分表">你分库分表的姿势对么？——详谈水平分库分表</a><time datetime="2021-11-14T08:45:31.440Z" title="Created 2021-11-14 16:45:31">2021-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/11/14/Java%20%E8%BF%9B%E9%98%B6%E8%B7%AF%E7%BA%BF%E5%9B%BE/" title="Java进阶路线图">Java进阶路线图</a><time datetime="2021-11-14T06:58:00.986Z" title="Created 2021-11-14 14:58:00">2021-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/02/17/%5B%E8%BD%AC%E8%BD%BD%5D%E8%8A%8B%E9%81%93%20Soul%20%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8%EF%BC%88%E5%9B%BD%E4%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3%EF%BC%89/" title="Soul 极简入门（国产微服务网关）">Soul 极简入门（国产微服务网关）</a><time datetime="2021-02-17T08:33:16.109Z" title="Created 2021-02-17 16:33:16">2021-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2020/09/30/Spring5.3%20%E6%BA%90%E7%A0%81%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="Spring5.3 源码环境搭建">Spring5.3 源码环境搭建</a><time datetime="2020-09-30T13:28:47.425Z" title="Created 2020-09-30 21:28:47">2020-09-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2020/01/01/Spring-Cloud-Alibaba%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89Nacos%E5%88%9D%E8%AF%86/" title="Spring Cloud Alibaba系列教程（一）Nacos初识">Spring Cloud Alibaba系列教程（一）Nacos初识</a><time datetime="2020-01-01T15:17:33.000Z" title="Created 2020-01-01 23:17:33">2020-01-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By will-we</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
